@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-bebas: var(--font-bebas);
+  --font-playfair: var(--font-playfair);
+  --font-sharp: "Sharp Grotesk", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html {
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html {
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Hide Calendly iframe scrollbar */
+.calendly-container {
+  overflow: hidden;
+}
+
+.calendly-container .calendly-inline-widget {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+}
+
+.calendly-container .calendly-inline-widget iframe {
+  width: calc(100% + 8px) !important;
+  height: calc(100% + 8px) !important;
+}
+
+@media (min-width: 768px) {
+  .calendly-container .calendly-inline-widget iframe {
+    width: calc(100% + 17px) !important;
+    height: calc(100% + 17px) !important;
+  }
+}
+
+@font-face {
+  font-family: 'Sharp Grotesk';
+  src: url('/fonts/SharpGrotesk-Bold15.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sharp Grotesk';
+  src: url('/fonts/SharpGrotesk-SemiBold15.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sharp Grotesk';
+  src: url('/fonts/SharpGrotesk-Medium15.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sharp Grotesk';
+  src: url('/fonts/SharpGrotesk-Book15.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
