@@ -1,9 +1,46 @@
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
+const contactSchema = z.object({
+    email: z.string().email(),
+    company: z.string().optional(),
+    interest: z.string().min(1),
+    message: z.string().min(5).max(2000),
+});
+
+// Simple in-memory rate limiting
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+const MAX_REQUESTS = 5;
 
 export async function POST(request) {
     try {
-        const { email, company, interest, message } = await request.json();
+        const ip = request.headers.get('x-forwarded-for') || 'anonymous';
+        const now = Date.now();
+        const userRateLimit = rateLimitMap.get(ip) || { count: 0, startTime: now };
+
+        if (now - userRateLimit.startTime > RATE_LIMIT_WINDOW) {
+            userRateLimit.count = 1;
+            userRateLimit.startTime = now;
+        } else {
+            userRateLimit.count++;
+        }
+
+        rateLimitMap.set(ip, userRateLimit);
+
+        if (userRateLimit.count > MAX_REQUESTS) {
+            return NextResponse.json({ message: 'Too many requests. Please try again later.' }, { status: 429 });
+        }
+
+        const body = await request.json();
+        const result = contactSchema.safeParse(body);
+
+        if (!result.success) {
+            return NextResponse.json({ message: 'Invalid input', errors: result.error.errors }, { status: 400 });
+        }
+
+        const { email, company, interest, message } = result.data;
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',

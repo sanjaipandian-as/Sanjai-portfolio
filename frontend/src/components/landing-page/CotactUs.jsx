@@ -4,6 +4,14 @@ import React, { useState, useEffect } from "react";
 import { X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { InlineWidget } from "react-calendly";
+import { z } from 'zod';
+
+const contactSchema = z.object({
+    email: z.string().email("Invalid email address"),
+    company: z.string().optional(),
+    interest: z.string().min(1, "Please select an interest"),
+    message: z.string().min(5, "Message must be at least 5 characters").max(2000),
+});
 
 export default function ContactUs({ isOpen, onClose }) {
     const [view, setView] = useState("selection"); // 'selection' or 'form'
@@ -35,6 +43,13 @@ export default function ContactUs({ isOpen, onClose }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const validation = contactSchema.safeParse(formData);
+        if (!validation.success) {
+            alert(validation.error.errors[0].message);
+            return;
+        }
+
         setStatus("loading");
 
         try {
@@ -119,7 +134,7 @@ export default function ContactUs({ isOpen, onClose }) {
                                 className="flex flex-col items-center justify-center flex-1 space-y-6 sm:space-y-8 text-center py-6 sm:py-8 md:py-10 px-2"
                             >
                                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-6 sm:mb-8 md:mb-12 uppercase tracking-tight leading-tight">
-                                    Let's Work Together
+                                    Let&apos;s Work Together
                                 </h2>
 
                                 <div className="w-full space-y-3 sm:space-y-4 md:space-y-5 max-w-md">
@@ -184,7 +199,7 @@ export default function ContactUs({ isOpen, onClose }) {
                             >
                                 <div className="mb-6 sm:mb-8 md:mb-10 text-center md:text-left">
                                     <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-1 uppercase tracking-tight">Send us a Message</h2>
-                                    <p className="text-gray-500 font-medium text-sm sm:text-base">We'll get back to you within 24 hours.</p>
+                                    <p className="text-gray-500 font-medium text-sm sm:text-base">We&apos;ll get back to you within 24 hours.</p>
                                 </div>
 
                                 <form onSubmit={handleSubmit} className="flex flex-col space-y-4 sm:space-y-5 md:space-y-6 flex-1 w-full">
